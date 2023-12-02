@@ -2,4 +2,5 @@
 
 members = [
     "advent-01",
+    "advent-02",
 ]
