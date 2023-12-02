@@ -2,50 +2,42 @@ use std::collections::HashMap;
 use regex::Regex;
 
 fn main() {
-    let max_red_cubes: i32 = 12;
-    let max_green_cubes: i32 = 13;
-    let max_blue_cubes: i32 = 14;
-    let mut possible_game_id_sum: i32 = 0;
-    let mut set_power: i32 = 0;
+    let color_limits = [("red", 12), ("green", 13), ("blue", 14)];
+    let regex = Regex::new(r"(\d+)\s+(red|green|blue)").unwrap();
+    let mut round_1: i32 = 0;
+    let mut round_2: i32 = 0;
 
     include_str!("input").lines().enumerate().for_each(|(index, line)| {
         let round: i32 = index as i32 + 1;
-        let mut round_finished: bool = false;
 
-        let regex = Regex::new(r"(\d+)\s+(red|green|blue)").unwrap();
+        let mut color_values: HashMap<&str, Vec<i32>> = regex.captures_iter(line).fold(HashMap::new(), |mut acc: HashMap<&str, Vec<i32>>, capture| {
+            let number: i32 = capture.get(1).unwrap().as_str().parse::<i32>().unwrap();
+            let color: &str = capture.get(2).unwrap().as_str();
 
-        let mut color_values: HashMap<&str, Vec<i32>> = HashMap::new();
-
-        for capture in regex.captures_iter(line) {
-            let number = capture.get(1).unwrap().as_str().parse::<i32>().unwrap();
-            let color = capture.get(2).unwrap().as_str();
-
-            color_values.entry(color).or_insert(vec![]).push(number);
-        }
-
-        color_values.iter().for_each(|(color, values)| {
-            values.iter().for_each(|value| {
-                if color == &"red" && value > &max_red_cubes && !round_finished {
-                    round_finished = true;
-                } else if color == &"green" && value > &max_green_cubes && !round_finished {
-                    round_finished = true;
-                } else if color == &"blue" && value > &max_blue_cubes && !round_finished {
-                    round_finished = true;
-                }
-            });
-
+            acc.entry(color).or_insert(vec![]).push(number);
+            acc
         });
 
-        if !round_finished {
-            possible_game_id_sum += round;
+        if !color_limits
+          .iter()
+          .any(|&(color, max_cubes)| {
+              color_values
+                .get(color)
+                .map_or(false, |values| values.iter().any(|value| value > &max_cubes))
+          }) {
+            round_1 += round;
         }
-        let max_red = color_values.get("red").map_or(0, |values| *values.iter().max().unwrap_or(&0));
-        let max_green = color_values.get("green").map_or(0, |values| *values.iter().max().unwrap_or(&0));
-        let max_blue = color_values.get("blue").map_or(0, |values| *values.iter().max().unwrap_or(&0));
-        set_power += max_red * max_green * max_blue;
-        println!("{}: {} {} {} = {}", round, max_red, max_green, max_blue, set_power);
+
+        round_2 += color_limits
+          .iter()
+          .map(|&(color, _)| calculate_max_color_value(&color_values, color))
+          .fold(1, |acc, x| acc * x);
     });
 
-    println!("{}", possible_game_id_sum);
-    println!("{}", set_power);
+    println!("{}", round_1);
+    println!("{}", round_2);
+}
+
+fn calculate_max_color_value(color_values: &HashMap<&str, Vec<i32>>, color: &str) -> i32 {
+    color_values.get(color).map_or(0, |values| *values.iter().max().unwrap_or(&0))
 }

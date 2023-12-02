@@ -49,8 +49,6 @@ fn part_two() -> i32 {
         if line.is_empty() {
             continue;
         }
-        // println!("\n {}: {}", i, line);
-        let word_numbers: Vec<&str> = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"].to_vec();
 
 
         let re_number = Regex::new(r#"(?P<number>\d)"#).unwrap();
@@ -86,19 +84,13 @@ fn part_two() -> i32 {
                 }
             }
         }
-        // let numbers = extract_numbers(&converted_line);
-        // println!("line numbers {:?}", line_numbers);
-
         // Get the first number in the line
         if let Some(first) = line_numbers.first() {
             if let Some(last) = line_numbers.last() {
                 let concatenated_numbers = format!("{}{}", first, last);
-                // println!("Concatenated Numbers: {}", concatenated_numbers);
                 sum += concatenated_numbers.parse::<i32>().unwrap();
             }
         }
-        // let combined: String = line_numbers.first().to_string() + &line_numbers.last().to_string();
-        // println!("{}", combined);
         i += 1;
     }
     sum
