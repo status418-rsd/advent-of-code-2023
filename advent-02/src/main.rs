@@ -10,13 +10,14 @@ fn main() {
     include_str!("input").lines().enumerate().for_each(|(index, line)| {
         let round: i32 = index as i32 + 1;
 
-        let mut color_values: HashMap<&str, Vec<i32>> = regex.captures_iter(line).fold(HashMap::new(), |mut acc: HashMap<&str, Vec<i32>>, capture| {
-            let number: i32 = capture.get(1).unwrap().as_str().parse::<i32>().unwrap();
-            let color: &str = capture.get(2).unwrap().as_str();
-
-            acc.entry(color).or_insert(vec![]).push(number);
-            acc
-        });
+        let mut color_values: HashMap<&str, Vec<i32>> = regex
+          .captures_iter(line)
+          .fold(HashMap::new(), |mut acc, capture| {
+              acc.entry(capture.get(2).unwrap().as_str())
+                .and_modify(|v| v.push(capture.get(1).unwrap().as_str().parse().unwrap()))
+                .or_insert_with(|| vec![capture.get(1).unwrap().as_str().parse().unwrap()]);
+              acc
+          });
 
         if !color_limits
           .iter()
