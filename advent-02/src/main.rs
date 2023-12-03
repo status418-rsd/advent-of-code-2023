@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+
 use regex::Regex;
 
 fn main() {
@@ -37,16 +38,13 @@ fn round_2(color_values_per_game: &Vec<HashMap<String, Vec<i32>>>, color_limits:
 
 fn get_formatted_input() -> Vec<HashMap<String, Vec<i32>>> {
   let regex = Regex::new(r"(\d+)\s+(red|green|blue)").unwrap();
-  include_str!("input").lines().enumerate().map(|(_, line)| {
-    let color_values_map: HashMap<String, Vec<i32>> = regex
-      .captures_iter(line)
-      .fold(HashMap::new(), |mut acc, capture| {
-        acc.entry(capture.get(2).unwrap().as_str().to_string())
-          .and_modify(|v| v.push(capture.get(1).unwrap().as_str().parse().unwrap()))
-          .or_insert_with(|| vec![capture.get(1).unwrap().as_str().parse().unwrap()]);
-        acc
-      });
-    color_values_map
+  include_str!("input").lines().map(|line| {
+    regex.captures_iter(line).fold(HashMap::new(), |mut acc, capture| {
+      acc.entry(capture.get(2).unwrap().as_str().to_string())
+        .and_modify(|v| v.push(capture.get(1).unwrap().as_str().parse().unwrap()))
+        .or_insert_with(|| vec![capture.get(1).unwrap().as_str().parse().unwrap()]);
+      acc
+    })
   }).collect()
 }
 
