@@ -73,7 +73,7 @@ Once all of the originals and copies have been processed, you end up with **```1
 Process all of the original and copied scratchcards until no more scratchcards are won. Including the original set of scratchcards, **how many total scratchcards do you end up with?**
 
 <details>
-    <summary>Part 1 answer</summary>
+    <summary>Part 2 answer</summary>
 
     Your puzzle answer was 5489600.
 </details>
