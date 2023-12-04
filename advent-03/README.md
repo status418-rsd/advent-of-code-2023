@@ -31,6 +31,7 @@ Of course, the actual engine schematic is much larger. **What is the sum of all 
 
 <details>
     <summary>Part 1 answer</summary>
+
     Your puzzle answer was <code>535351</code>.
 </details>
 
@@ -66,5 +67,6 @@ In this schematic, there are **two** gears. The first is in the top left; it has
 
 <details>
     <summary>Part 2 answer</summary>
+
     Your puzzle answer was <code>87287096</code>.
 </details>
